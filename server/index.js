@@ -1,4 +1,5 @@
 var cors = require("cors");
+const db = require("./models");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -15,6 +16,15 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => {
   res.send("Hello, World");
 });
+
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("Synced db.");
+  })
+  .catch((err) => {
+    console.log("Failed to sync db: " + err.message);
+  });
 
 const studentRoutes = require("./routes/student.routes");
 app.use("/api/v1/student", studentRoutes);
