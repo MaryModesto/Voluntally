@@ -1,18 +1,19 @@
 module.exports = (app) => {
-  const event_attendance = require("../controllers/event_attendance.controller");
+  const student = require("../controllers/student.controller");
   let router = require("express").Router();
 
-  router.get("/findByID", event_attendance.findByAttID);
-  router.get("/findByEvent", event_attendance.findAttByEvent);
-  router.get("/findByStudent", event_attendance.findAttByStudent);
-  router.post("/create", event_attendance.create);
-  router.post("/delete", event_attendance.delete);
-  router.put("/update", event_attendance.update);
+  router.get("/", student.findAll);
+  router.get("/findProgram", student.findByProgram);
+  router.get("/findYear", student.findByYear);
+  router.get("/findByID", student.findOneID);
+  router.post("/create", student.create);
+  router.post("/delete", student.delete);
+  router.put("/update", student.update);
 
-  app.use("/api/event_attendance", router);
+  app.use("/api/student", router);
 };
 
-/*MARY'S NOTES FOR TESTING IN POSTMAN:
+/*MARY'S NOTES FOR TESTING:
     WHEN "/create" USE THIS FORMAT:
     {
         "data": {

@@ -30,16 +30,42 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.findOne = (req, res) => {
+exports.findByProgram = (req, res) => {
   //conditional
-  let name = req.body.name;
+  let program = req.body.program;
 
-  Student.findOne({ where: { name: name } })
+  if (!program) {
+    return res.status(400).send({ message: "No program was filled out" });
+  }
+
+  Student.findAll({
+    where: {
+      program: program,
+    },
+  })
     .then((data) => {
-      res.status(200).send({
-        status: data ? "found" : "not found",
-        data: data ? data : null,
-      });
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.findByYear = (req, res) => {
+  //conditional
+  let year = req.body.year;
+
+  if (!year) {
+    return res.status(400).send({ message: "No year was filled out" });
+  }
+
+  Student.findAll({
+    where: {
+      year: year,
+    },
+  })
+    .then((data) => {
+      res.send(data);
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
@@ -48,7 +74,7 @@ exports.findOne = (req, res) => {
 
 exports.findOneID = (req, res) => {
   //options
-  let id = req.body.id;
+  let student_id = req.body.student_id;
 
   //the .findByPk method refers to finding somehting by it's primary key
   Student.findByPk(student_id)
@@ -82,7 +108,7 @@ exports.delete = (req, res) => {
   Student.destroy({ where: { student_id: data.student_id } })
     .then(() => {
       res.status(200).send({
-        message: "Publisher deleted!",
+        message: "student record deleted successfully",
       });
     })
     .catch((err) => {
