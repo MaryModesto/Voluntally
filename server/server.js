@@ -13,9 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello, World");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello, World");
+// });
 
 db.sequelize
   .sync()
@@ -26,8 +26,10 @@ db.sequelize
     console.log("Failed to sync db: " + err.message);
   });
 
-const studentRoutes = require("./routes/student.routes");
-app.use("/api/v1/student", studentRoutes);
+// const studentRoutes = require("./routes/student.routes");
+// app.use("/api/v1/student", studentRoutes);
+require("./routes/user.routes")(app);
+require("./routes/event_detail.routes")(app);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

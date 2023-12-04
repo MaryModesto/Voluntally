@@ -1,7 +1,7 @@
 const db = require("../models");
 const Op = db.Sequelize.Op;
 const Author = db.author;
-const AuthorList = db.authorList;
+const Event_attendancet = db.Event_attendance;
 
 exports.create = async (req, res) => {
   const data = req.body.data;

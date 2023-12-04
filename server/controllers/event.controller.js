@@ -1,6 +1,6 @@
 const db = require("../models");
 //const Op = db.Sequelize.Op;
-const Student = db.student;
+const Event = db.event;
 
 exports.create = async (req, res) => {
   const data = req.body.data;
