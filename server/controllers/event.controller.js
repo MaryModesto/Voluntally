@@ -1,16 +1,19 @@
+/*MARY'S NOTES: btw, I dunno how the filter works in front end, so if we actually do need
+to sort by name or find by amount of CES points and etc. just either (a)tell me so I could
+place in the method or if you want kay (b)add one in yourself, yer just lmk ra either works
+for me frfr*/
 const db = require("../models");
 //const Op = db.Sequelize.Op;
 const Event = db.event;
 
 exports.create = async (req, res) => {
   const data = req.body.data;
-  const student = {
-    program: data.program,
-    year: data.year,
-    //ASK SAM IF USER_ID SHOULD BE INCLUDED HERE
+  const event = {
+    event_id: data.event_id,
+    status: data.status,
   };
 
-  Student.create(student)
+  Event.create(event)
     .then((data) => {
       res.send(data);
     })
@@ -20,8 +23,8 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  //search options
-  Student.findAll()
+  //keep findAll blank without any attributes so that the method finds all frfr
+  Event.findAll()
     .then((data) => {
       res.send(data);
     })
@@ -30,28 +33,12 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.findOne = (req, res) => {
-  //conditional
-  let name = req.body.name;
-
-  Student.findOne({ where: { name: name } })
-    .then((data) => {
-      res.status(200).send({
-        status: data ? "found" : "not found",
-        data: data ? data : null,
-      });
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
-};
-
-exports.findOneID = (req, res) => {
+exports.findEventByID = (req, res) => {
   //options
-  let id = req.body.id;
+  let event_id = req.body.event_id;
 
   //the .findByPk method refers to finding somehting by it's primary key
-  Student.findByPk(student_id)
+  Event.findByPk(event_id)
     .then((data) => {
       res.status(200).send({
         status: data ? "found" : "not found",
@@ -65,10 +52,10 @@ exports.findOneID = (req, res) => {
 
 exports.update = (req, res) => {
   let data = req.body;
-  Student.update(data.publisher, { where: { student_id: data.student_id } })
+  Event.update(data.event, { where: { event_id: data.event_id } })
     .then(() => {
       res.status(200).send({
-        message: "student record updated successfully",
+        message: "event updated successfully",
       });
     })
     .catch((err) => {
@@ -79,10 +66,10 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   let data = req.body;
   //destroy is a sequelize method to delete basically
-  Student.destroy({ where: { student_id: data.student_id } })
+  Event.destroy({ where: { event_id: data.event_id } })
     .then(() => {
       res.status(200).send({
-        message: "Publisher deleted!",
+        message: "event deleted successfully",
       });
     })
     .catch((err) => {

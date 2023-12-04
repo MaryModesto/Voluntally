@@ -34,7 +34,7 @@ WHEN "/create" USE THIS FORMAT:
 I dunno why, but data has to be specified in this part, I'm guess it's cause of how I passed the
 params but ion know
 
-WHEN "findEventDetail" USE THIS FORMAT AT 'body' WITH JSON FORMAT:
+WHEN "/findEventDetail" && "/delete" USE THIS FORMAT AT 'body' WITH JSON FORMAT:
 {
     "event_detail_id": 1
 }
