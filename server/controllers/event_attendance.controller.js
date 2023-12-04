@@ -1,16 +1,17 @@
 const db = require("../models");
-//const Op = db.Sequelize.Op;
-const Student = db.student;
+const Op = db.Sequelize.Op;
+const Author = db.author;
+const AuthorList = db.authorList;
 
 exports.create = async (req, res) => {
   const data = req.body.data;
-  const student = {
-    program: data.program,
-    year: data.year,
-    //ASK SAM IF USER_ID SHOULD BE INCLUDED HERE
+  const author = {
+    firstName: data.fname,
+    lastName: data.lname,
+    bio: data.bio,
   };
 
-  Student.create(student)
+  Author.create(author)
     .then((data) => {
       res.send(data);
     })
@@ -21,7 +22,7 @@ exports.create = async (req, res) => {
 
 exports.findAll = (req, res) => {
   //search options
-  Student.findAll()
+  Author.findAll()
     .then((data) => {
       res.send(data);
     })
@@ -32,11 +33,12 @@ exports.findAll = (req, res) => {
 
 exports.findOne = (req, res) => {
   //conditional
-  let name = req.body.name;
+  let fname = req.body.fname;
+  let lname = req.body.lname;
 
-  Student.findOne({ where: { name: name } })
+  Author.findOne({ where: { firstName: fname, lastName: lname } })
     .then((data) => {
-      res.status(200).send({
+      res.send({
         status: data ? "found" : "not found",
         data: data ? data : null,
       });
@@ -50,10 +52,9 @@ exports.findOneID = (req, res) => {
   //options
   let id = req.body.id;
 
-  //the .findByPk method refers to finding somehting by it's primary key
-  Student.findByPk(student_id)
+  Author.findByPk(id)
     .then((data) => {
-      res.status(200).send({
+      res.send({
         status: data ? "found" : "not found",
         data: data ? data : null,
       });
@@ -65,10 +66,10 @@ exports.findOneID = (req, res) => {
 
 exports.update = (req, res) => {
   let data = req.body;
-  Student.update(data.student, { where: { student_id: data.student_id } })
+  Author.update(data.author, { where: { id: data.id } })
     .then(() => {
       res.status(200).send({
-        message: "student record updated successfully",
+        message: "User type updated!",
       });
     })
     .catch((err) => {
@@ -78,11 +79,10 @@ exports.update = (req, res) => {
 
 exports.delete = (req, res) => {
   let data = req.body;
-  //destroy is a sequelize method to delete basically
-  Student.destroy({ where: { student_id: data.student_id } })
+  Author.destroy({ where: { id: data.id } })
     .then(() => {
       res.status(200).send({
-        message: "Publisher deleted!",
+        message: "User type deleted!",
       });
     })
     .catch((err) => {

@@ -1,31 +1,33 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
-// const sequelize = new Sequelize();
-
 module.exports = (sequelize, Datatypes) => {
-  const Student = sequelize.define("student", {
-    student_id: {
+  const Event_attendance = sequelize.define("event_attendance", {
+    e_a_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    program: { type: DataTypes.STRING, unique: false, allowNull: false },
-    year: { type: DataTypes.ENUM("1", "2", "3", "4"), allowNull: false },
-    points: {
+    event_id: {
       type: DataTypes.INTEGER,
       unique: false,
       allowNull: false,
-      defaultValue: 0,
+      references: {
+        model: "events",
+        key: "event_id",
+      },
     },
-    user_id: {
+    student_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "users",
-        key: "user_id",
+        model: "students",
+        key: "student_id",
       },
+    },
+    att_status: {
+      type: DataTypes.ENUM("absent", "pending", "approved"),
     },
   });
 
-  return Student;
+  return Event_attendance;
 };

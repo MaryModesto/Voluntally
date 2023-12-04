@@ -65,7 +65,7 @@ exports.findOneID = (req, res) => {
 
 exports.update = (req, res) => {
   let data = req.body;
-  Student.update(data.student, { where: { student_id: data.student_id } })
+  Student.update(data.publisher, { where: { student_id: data.student_id } })
     .then(() => {
       res.status(200).send({
         message: "student record updated successfully",

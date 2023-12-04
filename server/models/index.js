@@ -1,5 +1,4 @@
 const dbConfig = require("../config/db.config.js");
-
 const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -23,110 +22,48 @@ const db = {
 };
 
 // connect to all models
+db.user = require("./user/user.model.js")(sequelize, Sequelize);
 db.student = require("./student/student.model.js")(sequelize, Sequelize);
+db.event = require("./event/event.model.js")(sequelize, Sequelize);
+db.event_detail = require("./event_detail/event_detail.model.js")(
+  sequelize,
+  Sequelize
+);
+db.event_attendance = require("./event_attendance/event_attendance.model.js")(
+  sequelize,
+  Sequelize
+);
+db.admin = require("./admin/admin.model.js")(sequelize, Sequelize);
+// db.role = require("./role/role.model.js")(sequelize, Sequelize);
 
-// db.userType = require("./user/userType.model")(sequelize, Sequelize);
+//RELATIONS
+// db.user.hasOne(db.role, { foreignKey: "role_id" });
+// db.role.belongsTo(db.user, { foreignKey: "role_id" });
 
-// db.book = require("./book/book.model")(sequelize, Sequelize);
-// db.bookCopy = require("./book/bookCopy.model")(sequelize, Sequelize);
-// db.bookImg = require("./book/bookImg.model")(sequelize, Sequelize);
+// db.admin.belongsTo(db.user, { foreignKey: "user_id" });
+// db.user.hasOne(db.admin, { foreignKey: "user_id" });
 
-// db.author = require("./book/author/author.model")(sequelize, Sequelize);
-// db.authorList = require("./book/author/authorList.model")(sequelize, Sequelize);
+// db.student.belongsTo(db.user, { foreignKey: "user_id" });
+// db.user.hasOne(db.student, { foreignKey: "user_id" });
 
-// db.genre = require("./book/genre/genre.model")(sequelize, Sequelize);
-// db.genreList = require("./book/genre/genreList.model")(sequelize, Sequelize);
+// db.student.hasMany(db.event_attendance, { foreignKey: "student_id" });
+// db.event_attendance.belongsTo(db.student, { foreignKey: "student_id" });
 
-// db.subject = require("./book/subject/subject.model")(sequelize, Sequelize);
-// db.subjectList = require("./book/subject/subjectList.model")(
-//   sequelize,
-//   Sequelize
-// );
+// db.event.hasMany(db.event_attendance, { foreignKey: "e_a_id" });
+// db.event_attendance.belongsTo(db.event, { foreignKey: "e_a_id" });
+db.event_attendance.belongsTo(db.event, { foreignKey: "att_id" });
+db.event.hasMany(db.event_attendance, { foreignKey: "att_id" });
 
-// db.classification = require("./book/classification/classification.model")(
-//   sequelize,
-//   Sequelize
-// );
-// db.publisher = require("./book/publisher/publisher.model")(
-//   sequelize,
-//   Sequelize
-// );
-// db.rating = require("./book/rating/rating.model")(sequelize, Sequelize);
+db.student.hasMany(db.event_attendance, { foreignKey: "student_id" });
+db.event_attendance.belongsTo(db.student, { foreignKey: "student_id" });
 
-// db.fineCateg = require("./transaction/fineCateg.model")(sequelize, Sequelize);
-// db.fine = require("./transaction/fine.model")(sequelize, Sequelize);
+db.event.hasOne(db.event_detail, { foreignKey: "event_detail_id" });
+db.event_detail.belongsTo(db.event, { foreignKey: "event_detail_id" });
 
-// db.ticket = require("./transaction/ticket.model")(sequelize, Sequelize);
-// db.notification = require("./user/notification.model")(sequelize, Sequelize);
+db.student.hasOne(db.user, { foreignKey: "user_id" });
+db.user.belongsTo(db.student, { foreignKey: "user_id" });
 
-// //RELATIONS
-// // user
-// db.userType.hasMany(db.user, { foreignKey: "typeID" });
-// db.user.belongsTo(db.userType, { foreignKey: "typeID" });
-
-// db.user.hasMany(db.notification, { foreignKey: "userID" });
-// db.notification.belongsTo(db.user, { foreignKey: "userID" });
-
-// db.user.hasMany(db.rating, { foreignKey: "userID" });
-// db.rating.belongsTo(db.user, { foreignKey: "userID" });
-
-// // books
-// db.book.belongsTo(db.bookImg, { foreignKey: "imageID" });
-// db.bookImg.hasOne(db.book, { foreignKey: "imageID" });
-
-// db.book.hasMany(db.bookCopy, { foreignKey: "bookID" });
-// db.bookCopy.belongsTo(db.book, { foreignKey: "bookID" });
-
-// db.book.hasMany(db.rating, { foreignKey: "bookID" });
-// db.rating.belongsTo(db.book, { foreignKey: "bookID" });
-
-// db.author.belongsToMany(db.book, {
-//   through: db.authorList,
-//   foreignKey: "authorID",
-// });
-// db.book.belongsToMany(db.author, {
-//   through: db.authorList,
-//   foreignKey: "bookID",
-// });
-
-// db.genre.belongsToMany(db.book, {
-//   through: db.genreList,
-//   foreignKey: "genreID",
-// });
-// db.book.belongsToMany(db.genre, {
-//   through: db.genreList,
-//   foreignKey: "bookID",
-// });
-
-// db.subject.belongsToMany(db.book, {
-//   through: db.subjectList,
-//   foreignKey: "subjectID",
-// });
-// db.book.belongsToMany(db.subject, {
-//   through: db.subjectList,
-//   foreignKey: "bookID",
-// });
-
-// db.book.belongsTo(db.publisher, { foreignKey: "publisherID" });
-// db.publisher.hasMany(db.book, { foreignKey: "publisherID" });
-
-// db.book.belongsTo(db.classification, { foreignKey: "classificationID" });
-// db.classification.hasMany(db.book, { foreignKey: "classificationID" });
-
-// // fines
-// db.fine.belongsTo(db.fineCateg, { foreignKey: "categID" });
-// db.fineCateg.hasMany(db.fine, { foreignKey: "categID" });
-
-// db.ticket.hasOne(db.fine, { foreignKey: "ticketID" });
-// db.fine.belongsTo(db.ticket, { foreignKey: "ticketID" });
-
-// db.ticket.belongsTo(db.user, { foreignKey: "userID" });
-// db.user.hasMany(db.ticket, { foreignKey: "userID" });
-
-// db.ticket.belongsTo(db.book, { foreignKey: "bookID" });
-// db.book.hasMany(db.ticket, { foreignKey: "bookID" });
-
-// db.ticket.belongsTo(db.bookCopy, { foreignKey: "copyID" });
-// db.bookCopy.hasMany(db.ticket, { foreignKey: "copyID" });
+db.admin.hasOne(db.user, { foreignKey: "user_id" });
+db.user.belongsTo(db.admin, { foreignKey: "user_id" });
 
 module.exports = db;
