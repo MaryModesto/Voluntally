@@ -9,7 +9,7 @@ const Event = db.event;
 exports.create = async (req, res) => {
   const data = req.body.data;
   const event = {
-    event_id: data.event_id,
+    event_detail_id: data.event_detail_id,
     status: data.status,
   };
 
@@ -44,6 +44,24 @@ exports.findEventByID = (req, res) => {
         status: data ? "found" : "not found",
         data: data ? data : null,
       });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.findEventByStatus = (req, res) => {
+  //options
+  let status = req.body.status;
+
+  //the .findByPk method refers to finding somehting by it's primary key
+  Event.findAll({
+    where: {
+      status: status,
+    },
+  })
+    .then((data) => {
+      res.send(data);
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });

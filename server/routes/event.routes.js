@@ -4,6 +4,7 @@ module.exports = (app) => {
 
   router.get("/", event.findAll);
   router.get("/findEvent", event.findEventByID);
+  router.get("/findStatus", event.findEventByStatus);
   router.post("/create", event.create);
   router.post("/delete", event.delete);
   router.put("/update", event.update);
