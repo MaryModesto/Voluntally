@@ -1,17 +1,18 @@
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const Author = db.author;
-const Event_attendancet = db.Event_attendance;
+const Event_attendance = db.Event_attendance;
+// const Event = db.event;
+// const Student = db.student;
 
 exports.create = async (req, res) => {
   const data = req.body.data;
-  const author = {
-    firstName: data.fname,
-    lastName: data.lname,
-    bio: data.bio,
+  const event_attendance = {
+    att_status: data.att_status,
+    student_id: data.student_id,
+    event_id: data.event_id,
   };
 
-  Author.create(author)
+  Event_attendance.create(event_attendance)
     .then((data) => {
       res.send(data);
     })
@@ -20,9 +21,16 @@ exports.create = async (req, res) => {
     });
 };
 
-exports.findAll = (req, res) => {
+exports.findAttByEvent = (req, res) => {
   //search options
-  Author.findAll()
+  const event_id = req.body.event_id;
+  Event_attendance.findAll({
+    where: {
+      event_id: {
+        [Op.eq]: event_id,
+      },
+    },
+  })
     .then((data) => {
       res.send(data);
     })
@@ -31,28 +39,32 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.findOne = (req, res) => {
-  //conditional
-  let fname = req.body.fname;
-  let lname = req.body.lname;
-
-  Author.findOne({ where: { firstName: fname, lastName: lname } })
+exports.findAttByStudent = (req, res) => {
+  //search options
+  const student_id = req.body.student_id;
+  Event_attendance.findAll({
+    where: {
+      student_id: {
+        [Op.eq]: student_id,
+      },
+    },
+  })
     .then((data) => {
-      res.send({
-        status: data ? "found" : "not found",
-        data: data ? data : null,
-      });
+      res.send(data);
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
     });
 };
 
-exports.findOneID = (req, res) => {
-  //options
-  let id = req.body.id;
+//NOTE: PLEASE DO TELL ME IF WE SHOULD HAVE A FILTER SYSTEM THAT SHOWS STUDENT && STATUS
+//EX: SHOW RECORDS OF ATTENDANCE BY A STUDENT THAT IS APPROVED yer
 
-  Author.findByPk(id)
+exports.findByAttID = (req, res) => {
+  //options
+  let att_id = req.body.att_id;
+
+  Event_attendance.findByPk(att_id)
     .then((data) => {
       res.send({
         status: data ? "found" : "not found",
@@ -66,10 +78,12 @@ exports.findOneID = (req, res) => {
 
 exports.update = (req, res) => {
   let data = req.body;
-  Author.update(data.author, { where: { id: data.id } })
+  Event_attendance.update(data.event_attendance, {
+    where: { att_id: data.att_id },
+  })
     .then(() => {
       res.status(200).send({
-        message: "User type updated!",
+        message: "event attendance record updated successfully",
       });
     })
     .catch((err) => {
@@ -79,10 +93,10 @@ exports.update = (req, res) => {
 
 exports.delete = (req, res) => {
   let data = req.body;
-  Author.destroy({ where: { id: data.id } })
+  Event_attendance.destroy({ where: { att_id: data.att_id } })
     .then(() => {
       res.status(200).send({
-        message: "User type deleted!",
+        message: "event attendance deleted successfully",
       });
     })
     .catch((err) => {

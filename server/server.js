@@ -25,6 +25,7 @@ db.sequelize
 require("./routes/user.routes")(app);
 require("./routes/event_detail.routes")(app);
 require("./routes/event.routes")(app);
+require("./routes/event_attendance.routes")(app);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

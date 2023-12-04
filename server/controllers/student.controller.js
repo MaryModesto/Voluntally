@@ -7,7 +7,7 @@ exports.create = async (req, res) => {
   const student = {
     program: data.program,
     year: data.year,
-    //ASK SAM IF USER_ID SHOULD BE INCLUDED HERE
+    user_id: data.user_id,
   };
 
   Student.create(student)
