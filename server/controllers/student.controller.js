@@ -1,22 +1,31 @@
 const db = require("../models");
-//const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;
 const Student = db.student;
+const User = db.user;
 
 exports.create = async (req, res) => {
-  const data = req.body.data;
-  const student = {
-    program: data.program,
-    year: data.year,
-    user_id: data.user_id,
-  };
+  try {
+    const data = req.body.data;
 
-  Student.create(student)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
+    const createdUser = await User.create({
+      user_id: data.user_id,
+      email: data.email,
+      password: data.password,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      role: data.role,
     });
+
+    const createdStudent = await Student.create({
+      program: data.program,
+      year: data.year,
+      userId: createdUser.user_id,
+    });
+
+    res.send({ student: createdStudent, user: createdUser });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 };
 
 exports.findAll = (req, res) => {
